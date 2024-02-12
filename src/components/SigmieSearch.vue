@@ -71,7 +71,6 @@ let state = reactive({
 });
 
 onBeforeMount(() => {
-
   urls.value = [
     `https://${props.applicationId}-a.sigmie.app/v1/search/${props.search}`,
     `https://${props.applicationId}-b.sigmie.app/v1/search/${props.search}`,
@@ -79,19 +78,29 @@ onBeforeMount(() => {
   ];
 
   search();
-
 });
 
 let urls = ref([]);
 let currentUrlIndex = 0;
 
 function getNextUrl() {
+  const url = urls.value[currentUrlIndex];
 
-  const url = urls[currentUrlIndex];
-
-  currentUrlIndex = (currentUrlIndex + 1) % urls.length;
+  currentUrlIndex = (currentUrlIndex + 1) % urls.value.length;
 
   return url;
+}
+
+function debounce(fn, delay) {
+  let timeoutId;
+  return function (...args) {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    timeoutId = setTimeout(() => {
+      fn(...args);
+    }, delay);
+  };
 }
 
 let search = function () {
@@ -107,7 +116,6 @@ let search = function () {
   };
 
   const url = props.url ? props.url : getNextUrl();
-  // : `https://${props.applicationId}.sigmie.app/v1/search/${props.search}`;
 
   fetch(url, {
     method: "POST",
@@ -145,5 +153,5 @@ let search = function () {
     });
 };
 
-watch(props, search);
+watch(props, debounce(search, props.debounceMs));
 </script>
