@@ -1,9 +1,11 @@
 <template>
-  <slot v-bind="state"></slot>
+  <template v-if="state.inited">
+    <slot v-bind="state"></slot>
+  </template>
 </template>
 
 <script setup>
-import { reactive, defineProps, watch, onBeforeMount } from "vue";
+import { reactive, defineProps, watch, onBeforeMount, ref } from "vue";
 
 let props = defineProps({
   url: {
@@ -58,6 +60,7 @@ let state = reactive({
   total: 0,
   page: 1,
   loading: false,
+  inited: false,
   facets: {},
   processing_time_ms: 0,
   per_page: 10,
@@ -117,6 +120,7 @@ let search = function () {
       state.to = Math.min(response.page * props.perPage, response.total);
       state.per_page = response.perPage;
       state.loading = false;
+      state.inited = true;
     });
 };
 
