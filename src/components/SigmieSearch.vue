@@ -103,7 +103,7 @@ function debounce(fn, delay) {
   };
 }
 
-let search = function () {
+let search = function (attempts = 3) {
   state.loading = true;
 
   const body = {
@@ -129,8 +129,11 @@ let search = function () {
     redirect: "follow",
     body: JSON.stringify(body),
   })
-    .then((respone) => {
-      return respone.json();
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
     })
     .then((response) => {
       if (response.error) {
@@ -150,6 +153,14 @@ let search = function () {
       state.per_page = response.perPage;
       state.loading = false;
       state.inited = true;
+    })
+    .catch((error) => {
+      console.error('Fetch error:', error);
+      if (!props.url && attempts > 1) {
+        search(attempts - 1);
+      } else {
+        state.loading = false;
+      }
     });
 };
 
