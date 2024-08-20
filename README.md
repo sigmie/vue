@@ -18,6 +18,27 @@
 npm install @sigmie/vue
 ```
 
-## Documentation
+<!-- ## Documentation -->
 
-For full documentation, visit [sigmie.com](https://sigmie.com).
+<!-- For full documentation, visit [sigmie.com](https://sigmie.com). -->
+
+### Example usage
+```jsx
+  <SigmieSearch
+            :debounce-ms="250"
+            :query="''"
+            :per-page="10"
+            :search="indexName"
+            :api-key="apiKey"
+            :sort="'_score'"
+            :filters="''"
+            :application-id="applicationId"
+            v-slot="{ hits, facets, total, loading, processing_time_ms }"
+        >
+
+        <div v-for="hit in hits">
+            {{ hit }}
+        </div>
+
+  </SigmieSearch>
+```
