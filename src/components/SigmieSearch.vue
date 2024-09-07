@@ -20,6 +20,10 @@ let props = defineProps({
     type: String,
     default: "",
   },
+  user_token: {
+    type: String,
+    required: false,
+  },
   apiKey: {
     type: String,
     default: "",
@@ -115,6 +119,10 @@ let search = function (attempts = 3) {
     sort: props.sort,
   };
 
+  if (props.user_token) {
+    body.user_token = props.user_token;
+  }
+
   const url = props.url ? props.url : getNextUrl();
 
   fetch(url, {
@@ -131,7 +139,7 @@ let search = function (attempts = 3) {
   })
     .then((response) => {
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error("Network response was not ok");
       }
       return response.json();
     })
@@ -155,7 +163,7 @@ let search = function (attempts = 3) {
       state.inited = true;
     })
     .catch((error) => {
-      console.error('Fetch error:', error);
+      console.error("Fetch error:", error);
       if (!props.url && attempts > 1) {
         search(attempts - 1);
       } else {
