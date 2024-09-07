@@ -20,7 +20,7 @@ let props = defineProps({
     type: String,
     default: "",
   },
-  user_token: {
+  userToken: {
     type: String,
     required: false,
   },
@@ -119,8 +119,8 @@ let search = function (attempts = 3) {
     sort: props.sort,
   };
 
-  if (props.user_token) {
-    body.user_token = props.user_token;
+  if (props.userToken) {
+    body.user_token = props.userToken;
   }
 
   const url = props.url ? props.url : getNextUrl();
