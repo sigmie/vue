@@ -86,6 +86,7 @@ onBeforeMount(() => {
 
 let urls = ref([]);
 let currentUrlIndex = 0;
+let currentFetchController = null;
 
 function getNextUrl() {
   const url = urls.value[currentUrlIndex];
@@ -108,6 +109,13 @@ function debounce(fn, delay) {
 }
 
 let search = function (attempts = 3) {
+  if (currentFetchController) {
+    currentFetchController.abort();
+  }
+
+  currentFetchController = new AbortController();
+  const signal = currentFetchController.signal;
+
   state.loading = true;
 
   const body = {
@@ -136,6 +144,7 @@ let search = function (attempts = 3) {
     },
     redirect: "follow",
     body: JSON.stringify(body),
+    signal: signal,
   })
     .then((response) => {
       if (!response.ok) {
@@ -163,11 +172,15 @@ let search = function (attempts = 3) {
       state.inited = true;
     })
     .catch((error) => {
-      console.error("Fetch error:", error);
-      if (!props.url && attempts > 1) {
-        search(attempts - 1);
+      if (error.name === 'AbortError') {
+        console.log('Fetch aborted');
       } else {
-        state.loading = false;
+        console.error("Fetch error:", error);
+        if (!props.url && attempts > 1) {
+          search(attempts - 1);
+        } else {
+          state.loading = false;
+        }
       }
     });
 };
