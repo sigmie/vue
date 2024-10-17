@@ -136,6 +136,7 @@ let search = function (attempts = 3) {
   const queryParams = new URLSearchParams({
     "x-sigmie-token": props.apiKey,
     "x-sigmie-application": props.applicationId,
+    ...body,
   });
 
   const urlWithParams = `${url}?${queryParams.toString()}`;
@@ -145,10 +146,10 @@ let search = function (attempts = 3) {
     mode: "cors",
     cache: "no-cache",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/x-www-form-urlencoded",
     },
     redirect: "follow",
-    body: JSON.stringify(body),
+    body: JSON.stringify({}),
     signal: signal,
   })
     .then((response) => {
