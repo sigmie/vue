@@ -119,8 +119,6 @@ let search = function (attempts = 3) {
   state.loading = true;
 
   const body = {
-    "x-sigmie-token": props.apiKey,
-    "x-sigmie-application": props.applicationId,
     query: props.query,
     per_page: props.perPage,
     filters: props.filters,
@@ -135,7 +133,14 @@ let search = function (attempts = 3) {
 
   const url = props.url ? props.url : getNextUrl();
 
-  fetch(url, {
+  const queryParams = new URLSearchParams({
+    "x-sigmie-token": props.apiKey,
+    "x-sigmie-application": props.applicationId,
+  });
+
+  const urlWithParams = `${url}?${queryParams.toString()}`;
+
+  fetch(urlWithParams, {
     method: "POST",
     mode: "cors",
     cache: "no-cache",
