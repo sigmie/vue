@@ -1,6 +1,6 @@
 {
   "name": "@sigmie/vue",
-  "version": "1.11.4",
+  "version": "1.11.5",
   "description": "Vue JS tools for Sigmie application.",
   "main": "dist/index.js",
   "scripts": {
