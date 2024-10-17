@@ -119,6 +119,8 @@ let search = function (attempts = 3) {
   state.loading = true;
 
   const body = {
+    "x-sigmie-token": props.apiKey,
+    "x-sigmie-application": props.applicationId,
     query: props.query,
     per_page: props.perPage,
     filters: props.filters,
@@ -139,8 +141,6 @@ let search = function (attempts = 3) {
     cache: "no-cache",
     headers: {
       "Content-Type": "application/json",
-      "X-Sigmie-API-Key": props.apiKey,
-      "X-Sigmie-Application": props.applicationId,
     },
     redirect: "follow",
     body: JSON.stringify(body),
@@ -172,10 +172,8 @@ let search = function (attempts = 3) {
       state.inited = true;
     })
     .catch((error) => {
-      if (error.name === 'AbortError') {
-        console.log('Fetch aborted');
+      if (error.name === "AbortError") {
       } else {
-        console.error("Fetch error:", error);
         if (!props.url && attempts > 1) {
           search(attempts - 1);
         } else {
